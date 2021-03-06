@@ -1,0 +1,92 @@
+#adminmenuwrap {
+    display: none !important;
+}
+
+body {
+    opacity: 0 !important;
+}
+
+body.render {
+    opacity: 1 !important;
+}
+
+.wp-menu-image.svg {
+    width: 20px;
+    height: 20px;
+    margin: 5px 5px 0 0;
+    float: left;
+}
+.dashicons {
+    margin: 5px 5px 0 0;
+}
+
+.log-data-info {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.log-data-info .divider {
+    width: 15px;
+}
+
+.list-group-item.disabled {
+    opacity: 0.5;
+}
+
+.ocurrency-chart {
+    display: flex;
+    width: 100px;
+    height: 35px;
+    margin: 25px 0 0 0;
+    position: relative;
+}
+
+.ocurrency-chart::after {
+    content: '';
+    background-color: #808080;
+    display: block;
+    width: 103px;
+    height: 2px;
+    left: -1px;
+    bottom: -4px;
+    position: absolute;
+}
+
+.ocurrency-chart .bar {
+    background-color: rgb(206, 206, 206);
+    display: inline-flex;
+    width: calc(100px / 10);
+    height: 100%;
+    margin: 0 1px;
+    position: relative;
+}
+
+.ocurrency-chart .inner-bar {
+    display: block;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+}
+
+.ocurrency-chart .inner-bar.default {
+    background-color: #666;
+}
+
+.ocurrency-chart .inner-bar.green {
+    background-color: rgb(38, 138, 38);
+}
+
+.ocurrency-chart .inner-bar.yellow {
+    background-color: rgb(179, 156, 29);
+}
+
+.ocurrency-chart .inner-bar.orange {
+    background-color: rgb(182, 84, 39);
+}
+
+.ocurrency-chart .inner-bar.red {
+    background-color: rgb(182, 37, 37);
+}

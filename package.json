@@ -1,0 +1,10 @@
+{
+  "name": "wugstracker",
+  "version": "1.0.0",
+  "description": "Wordpress plugin to debug javascript code.",
+  "main": "wugstracker.php",
+  "repository": "https://github.com/ivrusson/wugstracker",
+  "author": "ivrusson <ivrusson@maquinantes.com>",
+  "license": "GPL v3",
+  "private": false
+}
