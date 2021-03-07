@@ -44,7 +44,7 @@ export const Navbar = ({}) => {
                             <a class="nav-link ${wugs_data.current === 'tracker' ? 'active' : ''}" href="${wugs_data.current !== 'tracker' ? wugs_data.home_url +'/wp-admin/admin.php?page=wugstracker-admin-tracker' : '#'}">Tracker</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link ${wugs_data.current === 'configuration' ? 'active' : ''}" href="${wugs_data.current !== 'configuration' ? wugs_data.home_url + '/wp-admin/admin.php?page=wugstracker-admin-options' : '#'}">Configuration</a>
+                            <a class="nav-link ${wugs_data.current === 'configuration' ? 'active' : ''}" href="${wugs_data.current !== 'configuration' ? wugs_data.home_url + '/wp-admin/admin.php?page=wugstracker-admin-configuration' : '#'}">Configuration</a>
                         </li>
                     </ul>
                 </div>
