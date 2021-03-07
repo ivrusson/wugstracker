@@ -2,6 +2,8 @@
 namespace WugsTracker\Core;
 
 use WugsTracker\Utils;
+use SleekDB\Store as SleekStore;
+use SleekDB\Query as SleekQuery;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -28,13 +30,13 @@ class Store {
     
 	private $databaseDirectory = null;
     
-	private $logs_days = null;
+	private $db_dir_exists = false;
+    
+	private $logs = null;
     
 	private $logs_messages = null;
     
 	private $logs_activity = null;
-    
-	private $logs = null;
 
 	/**
 	 * Return an instance of this class.
@@ -69,20 +71,50 @@ class Store {
     public function do_hooks() {}
 
 	/**
-     * Attach Wordpress hooks
+     * Initialize funcion
      *
      * @return void
      */
     public function init() {
+
+        $created = self::$instance->create_database_dir(); //Create database directory
+        $has_perms = self::$instance->check_permissions(); //Check permissions of dir to prevent sleek db to crash
+
+		if($created) {
+			if($has_perms) {
+				self::$instance->load_database();
+			}
+		}
+    }
+
+	private function create_database_dir() {	
+        $databaseDirectory = trailingslashit( wp_upload_dir()['basedir'] ) . 'wugstracker-logs';
+		
+		$created = false;
+
+        if (!file_exists($databaseDirectory)) {
+            $created = mkdir($databaseDirectory, 0700, true); //Assign permissions only for propietary and group
+        } else {
+			$created = true;
+		}
+
+		if($created) {
+        	self::$instance->db_dir_exists = true;
+        	self::$instance->databaseDirectory = $databaseDirectory;
+		}
+
+		return $created;
+	}
+
+	private function check_permissions() {		
+		clearstatcache(null, self::$instance->databaseDirectory);
+
+    	return decoct( fileperms(self::$instance->databaseDirectory) & 0700 );
+	}
+
+	private function load_database() {       
         global $wugsdb; //Load a new global variable
 
-        $databaseDirectory = trailingslashit( wp_upload_dir()['basedir'] ) . 'wugstracker-logs';
-        if (!file_exists($databaseDirectory)) {
-            mkdir($databaseDirectory, 0600, true);
-        }
-
-        self::$instance->databaseDirectory = $databaseDirectory;
-        
 		//Set the database names
         $logs = 'Logs';
 		$logs_messages = 'Logs_Messages';
@@ -91,24 +123,26 @@ class Store {
 
         $wugsdb = (object) []; //Set the global variable
 
-		$configuration = [
+		$configuration = [ //Add search capabilities to SleekDB
 			"search" => [
 				"min_length" => 2,
 				"mode" => "or",
 				"score_key" => "scoreKey",
-				"algorithm" => \SleekDB\Query::SEARCH_ALGORITHM["hits"]
+				"algorithm" => SleekQuery::SEARCH_ALGORITHM["hits"]
 			]
 		];
 
 		//Load the Logs database
-        self::$instance->logs = new \SleekDB\Store($logs, $databaseDirectory, $configuration);
+        self::$instance->logs = new SleekStore($logs, self::$instance->databaseDirectory, $configuration);
         $wugsdb->logs = self::$instance->logs;
+
 		//Load the Logs messages database
-        self::$instance->logs_messages = new \SleekDB\Store($logs_messages, $databaseDirectory, $configuration);
+        self::$instance->logs_messages = new SleekStore($logs_messages, self::$instance->databaseDirectory, $configuration);
         $wugsdb->logs_messages = self::$instance->logs_messages;
+
 		//Load the Logs Activity database
-        self::$instance->logs_activity = new \SleekDB\Store($logs_activity, $databaseDirectory, $configuration);
+        self::$instance->logs_activity = new SleekStore($logs_activity, self::$instance->databaseDirectory, $configuration);
         $wugsdb->logs_activity = self::$instance->logs_activity;
-    }
+	}
 
 }
