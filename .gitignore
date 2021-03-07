@@ -1,1 +1,5 @@
+#FTP DEPLOY FILES
+.env
+
+/node_modules/
 /vendor/

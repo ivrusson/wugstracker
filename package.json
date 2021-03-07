@@ -5,6 +5,13 @@
   "main": "wugstracker.php",
   "repository": "https://github.com/ivrusson/wugstracker",
   "author": "ivrusson <ivrusson@maquinantes.com>",
-  "license": "GPL v3",
-  "private": false
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {    
+    "dotenv": "^8.2.0",
+    "ftp-deploy": "^2.4.1"
+  },
+  "dependencies": {
+    "-": "^0.0.1"
+  }
 }
