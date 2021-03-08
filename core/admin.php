@@ -60,10 +60,21 @@ class Admin {
 	 */
 	private function do_hooks() {
         add_action( 'admin_menu', [self::$instance, 'add_pages'] );
+        add_action( 'admin_head', [self::$instance, 'hide_admin_notices'], 1 );
         add_action('admin_enqueue_scripts', [self::$instance, 'css_and_js']);
         add_action('script_loader_tag', [self::$instance, 'replace_to_type_module']);
         add_filter( 'after_setup_theme', [self::$instance, 'remove_admin_bar']);
 	}
+
+    public function hide_admin_notices() {
+        global $pagenow;
+            
+        $currentPage = isset($_GET['page']) ? $_GET['page'] : '';
+        
+        if( $pagenow === 'admin.php' && in_array($currentPage, ['wugstracker-admin-tracker', 'wugstracker-admin-configuration']) ) {
+            remove_all_actions( 'admin_notices' );
+        }
+    }
     
     public function remove_admin_bar() {
         global $pagenow;
