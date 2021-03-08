@@ -163,7 +163,7 @@ export const Menu = ({ state, dispatch }) => {
                         </div>
                     <div class="btn-group">
                         <button type="button" class="btn btn-outline-secondary dropdown-toggle btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
-                            Show: <b>${currentorderBy}</b>
+                            Sort by: <b>${currentorderBy}</b>
                         </button>
                         <ul class="dropdown-menu">
                             ${orderByList.map(item => html`<li><a class="dropdown-item" role="button" onclick=${(e) => changeOrderBy(e, item.orderBy, state, dispatch)}>${item.title}</a></li>`)}

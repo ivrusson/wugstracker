@@ -148,7 +148,7 @@ class Admin {
                 wp_deregister_style('wp-admin');
                 wp_enqueue_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css', array() );
                 wp_enqueue_style( 'bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css', array() );
-                wp_enqueue_style( 'wugstracker-admin', WUGSTRACKER_URL . '/admin/css/admin.css', array(), time() , 'all' );
+                wp_enqueue_style( 'wugstracker-admin', WUGSTRACKER_URL . '/admin/assets/css/admin.css', array(), time() , 'all' );
 
                 wp_enqueue_script( 'luxon', 'https://cdn.jsdelivr.net/npm/luxon@1.26.0/build/global/luxon.min.js', array() );
                 wp_enqueue_script( 'lodash', 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js', array() );
@@ -160,9 +160,10 @@ class Admin {
                 wp_enqueue_script( 'prop-types', 'https://unpkg.com/prop-types@latest/prop-types.min.js', array() );
                 wp_enqueue_script( 'babel', 'https://unpkg.com/babel-standalone@6.26.0/babel.min.js', array() );
 
-                wp_enqueue_script( 'wugstracker-admin-api', WUGSTRACKER_URL . '/admin/js/api.js', array(), time() , 'all' );
+                wp_enqueue_script( 'wugstracker-admin-api', WUGSTRACKER_URL . '/admin/assets/js/api.js', array(), time() , 'all' );
                 $data = array(
                     'current' => str_replace('wugstracker-admin-', '', $currentPage),
+                    'assets_url' => WUGSTRACKER_URL . 'admin/assets',
                     'home_url' => home_url(),
                     'api_url' => home_url() . '/wugs/',
                     'wp_admin_menu' => $GLOBALS['menu'],
@@ -171,7 +172,7 @@ class Admin {
                 wp_localize_script( 'wugstracker-admin-api', 'wugs_data', $data );
                 wp_enqueue_script( 'wugstracker-admin-api' );
 
-                wp_enqueue_script( 'wugstracker-admin-api', WUGSTRACKER_URL . '/admin/js/api.js', array(), time() , 'all' );
+                wp_enqueue_script( 'wugstracker-admin-api', WUGSTRACKER_URL . '/admin/assets/js/api.js', array(), time() , 'all' );
             }        
         
             if( $currentPage === 'wugstracker-admin-tracker' || $currentPage === 'wugstracker-admin-configuration' ) {
