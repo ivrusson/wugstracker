@@ -65,7 +65,7 @@ class Plugin {
 	 * @access private
 	 */
 	private function register_autoloader() {
-		require_once WPJS_DEBUG_PATH . '/includes/autoloader.php';
+		require_once WUGSTRACKER_PATH . '/includes/autoloader.php';
 
 		Autoloader::run();
 	}

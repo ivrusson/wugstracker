@@ -31,7 +31,28 @@ const searchBy = async (e, state, dispatch) => {
     }
 };
 
-const doOrderBy = async (e, orderBy, state, dispatch) => {
+const changeLimit = async (e, limit, state, dispatch) => {
+    e.preventDefault();
+    const { pagination } = state;
+    const { orderBy, skip } = pagination;
+
+    dispatch({ type: 'loading', payload: true });
+    let logsResult = await WugsApi.fetch({
+        method: 'GET',
+        path: 'logs',
+        query: {
+            limit,
+            skip,
+            orderBy
+        }
+    });
+    if (logsResult) {
+        dispatch({ type: 'set_logs', payload: logsResult });
+        dispatch({ type: 'set_page', payload: 1 });
+    }
+};
+
+const changeOrderBy = async (e, orderBy, state, dispatch) => {
     e.preventDefault();
     const { pagination } = state;
     const { limit, skip } = pagination;
@@ -95,6 +116,13 @@ const refresh = async (e, state, dispatch) => {
     }
 };
 
+const perPageList = [
+    { title: '5 items', limit: 5 },
+    { title: '10 items', limit: 10 },
+    { title: '25 items', limit: 25 },
+    { title: '50 items', limit: 50 },
+]
+
 const orderByList = [
     { title: 'Newest dates', orderBy: { updated_at: 'desc' } },
     { title: 'Oldest dates', orderBy: { updated_at: 'asc' } }
@@ -103,10 +131,15 @@ const orderByList = [
 export const Menu = ({ state, dispatch }) => {
     const { pagination, search } = state;
 
-    let currentorderBy = 'Filtrar';
+    let currentorderBy = 'Page limit';
+    let currentLimit = 'Sort by';
+
+    perPageList.forEach(item => {
+        if (JSON.stringify(item.limit) === JSON.stringify(pagination.limit)) currentLimit = item.title;
+    });
     orderByList.forEach(item => {
         if (JSON.stringify(item.orderBy) === JSON.stringify(pagination.orderBy)) currentorderBy = item.title;
-    })
+    });
 
     let title = html`<a class="navbar-brand">The system already tracks <span class="text-secondary">${pagination.total}</span> issues.</a>`;
     if (search) {
@@ -118,11 +151,22 @@ export const Menu = ({ state, dispatch }) => {
                 ${title}
                 <div class="d-flex">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-outline-secondary dropdown-toggle btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
-                            ${currentorderBy}
+                        <button type="button" class="btn btn-outline-secondary dropdown-toggle btn-sm" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Show: <b>${currentLimit}</b>
                         </button>
                         <ul class="dropdown-menu">
-                            ${orderByList.map(item => html`<li><a class="dropdown-item" role="button" onclick=${(e) => doOrderBy(e, item.orderBy, state, dispatch)}>${item.title}</a></li>`)}
+                            ${perPageList.map(item => html`<li><a class="dropdown-item" role="button" onclick=${(e)=> changeLimit(e, item.limit, state, dispatch)}>${item.title}</a></li>`)}
+                        </ul>
+                    </div>
+                    <div style="width:10px;">
+                        </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-secondary dropdown-toggle btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                            Show: <b>${currentorderBy}</b>
+                        </button>
+                        <ul class="dropdown-menu">
+                            ${orderByList.map(item => html`<li><a class="dropdown-item" role="button" onclick=${(e) => changeOrderBy(e, item.orderBy, state, dispatch)}>${item.title}</a></li>`)}
                         </ul>
                     </div>
                     <div style="width:10px;"></div>

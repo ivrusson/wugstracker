@@ -2,6 +2,7 @@
 namespace WugsTracker\Core;
 
 use WugsTracker\Utils;
+use WugsTracker\Core\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -65,20 +66,31 @@ class Debugger {
     }
 
     public function add_scripts() {
-        wp_register_script( 'wugstracker', WPJS_DEBUG_ASSETS . '/js/wugstracker.js', array(), time() , 'all' );
+        wp_register_script( 'wugstracker', WUGSTRACKER_URL . '/assets/js/wugstracker.js', array(), time() , 'all' );
         // Localize the script with new data
         $data = array(
             'api_endpoint' => home_url() . '/wugs/log/'
         );
         wp_localize_script( 'wugstracker', 'wugsData', $data );
         wp_enqueue_script( 'wugstracker' );
+
+        $test_option = get_option('wugstracker_JS_test_active', false) === '1' ? true : false;
+        if($test_option) {
+            $inline_script = `
+            console.log('Console test 1');
+            console.log('Console test 2');
+            console.log('Console test 3');
+            thisIsNotAFunction();
+            `;
+            wp_add_inline_script( 'wugstracker', $inline_script );
+        }
     }
 
     public function on_plugin_load() {
-        $wp_debug = get_option('wugstracker_WP_debug', false) === '1' ? true : false;
-        $wp_debug_log = get_option('wugstracker_WP_log', false) === '1' ? true : false;
-        $wp_debug_display = get_option('wugstracker_WP_display', false) === '1' ? true : false;
-        $error_handler = get_option('wugstracker_PHP_active', false) === '1' ? true : false;
+        $wp_debug = Admin::get_option('wugstracker_WP_debug');
+        $wp_debug_log = Admin::get_option('wugstracker_WP_log');
+        $wp_debug_display = Admin::get_option('wugstracker_WP_display');
+        $error_handler = Admin::get_option('wugstracker_PHP_active');
 
         if($wp_debug) {
             define( 'WP_DEBUG', $wp_debug );

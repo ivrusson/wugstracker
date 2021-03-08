@@ -63,7 +63,6 @@ export const Ocurrency = ({ log }) => {
             maxCountDetected = count > maxCountDetected ? count : maxCountDetected;
             itemsByDay[key].color = color;
         });
-        console.log(itemsByDay);
 
         return {
             maxCountDetected,
@@ -79,9 +78,10 @@ export const Ocurrency = ({ log }) => {
             ${Object.keys(chart.itemsByDay).map(key => {
                 let bar = chart.itemsByDay[key];
                 let height = Math.ceil(bar.count * 100 / chart.maxOcurrenciesPerDay);
+                let styles = { style: { height: height +"%" } };
                 return html`
                     <div class="bar" data-bs-toggle="tooltip" data-bs-placement="top" title="${bar.lastEvent.toISODate()} | Count: ${bar.count}">
-                        <div class="inner-bar ${bar.color}" style="height:${height}%;"></div>
+                        <div class="inner-bar ${bar.color}" ...${styles}></div>
                     </div>
                 `;
             })}

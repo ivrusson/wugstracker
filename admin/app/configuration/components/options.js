@@ -54,9 +54,36 @@ export const Options = ({ state, dispatch }) => {
                 </div>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="wugstracker_JS_active" checked=${options.wugstracker_JS_active} onchange=${() => updateOption('wugstracker_JS_active')} />
-                    <label class="form-check-label" for="wugstracker_JS_active">Activate javascript debugger. ${options.wugstracker_JS_active === true ? html`<b style="color:green">(Option active)</b>` : ''}</label>
+                    <label class="form-check-label" for="wugstracker_JS_active">Activate javascript debugger.</label>
                 </div>
                 <small>You need to activate this option to start tracking Javascript errors.</small>
+                <hr class="divider" />
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="wugstracker_JS_test_active" checked=${options.wugstracker_JS_test_active} onchange=${()=> updateOption('wugstracker_JS_test_active')} />
+                    <label class="form-check-label" for="wugstracker_JS_test_active">Activate javascript test script.</label>
+                </div>
+                <small>This option render the following code that allow you to tracks the first error <span class="badge bg-secondary">thisIsNotAFunction()</span>.</small>
+                <pre class="code">
+                ${`<script type="text/javascript">thisIsNotAFunction();</script>`}
+                </pre>
+                <hr class="divider" />
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="wugstracker_WP_debug" checked=${options.wugstracker_WP_debug} onchange=${() => updateOption('wugstracker_WP_debug')} />
+                    <label class="form-check-label" for="wugstracker_WP_debug">Activate Wordpress debug.</label>
+                </div>
+                <small>This option activates Wordpress WP_DEBUG configuration.</small>
+                <hr class="divider" />
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="wugstracker_WP_log" checked=${options.wugstracker_WP_log} onchange=${() => updateOption('wugstracker_WP_log')} />
+                    <label class="form-check-label" for="wugstracker_WP_log">Activate Wordpress debug log.</label>
+                </div>
+                <small>This option activates Wordpress WP_DEBUG_LOG configuration.</small>
+                <hr class="divider" />
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="wugstracker_WP_display" checked=${options.wugstracker_WP_display} onchange=${() => updateOption('wugstracker_WP_display')} />
+                    <label class="form-check-label" for="wugstracker_WP_display">Activate Wordpress debug diplay.</label>
+                </div>
+                <small>This option activates Wordpress WP_DEBUG_DISPLAY configuration.</small>
             </div>
             <div class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
@@ -64,7 +91,7 @@ export const Options = ({ state, dispatch }) => {
                 </div>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="wugstracker_PHP_active" checked=${options.wugstracker_PHP_active} onchange=${() => updateOption('wugstracker_PHP_active')} />
-                    <label class="form-check-label" for="wugstracker_PHP_active">Activate PHP debugger. ${options.wugstracker_PHP_active === true ? html`<b style="color:green">(Option active)</b>` : ''}</label>
+                    <label class="form-check-label" for="wugstracker_PHP_active">Activate PHP debugger.</label>
                 </div>
                 <small>You need to activate this option to start tracking the PHP from "set_error_handler() function".</small>
             </div>

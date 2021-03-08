@@ -56,11 +56,58 @@ const goToPage = async (type, state, dispatch) => {
     
 };
 
+const  highlightText = (searchString) => {
+    const findAndReplace = (searchText, replacement, searchNode) => {
+        if (!searchText || typeof replacement === 'undefined') {
+            // Throw error here if you want...
+            return;
+        }
+        let regex = typeof searchText === 'string' ?
+            new RegExp(searchText, 'g') : searchText,
+            childNodes = (searchNode || document.body).childNodes,
+            cnLength = childNodes.length,
+            excludes = 'html,head,style,title,link,meta,script,object,iframe';
+        while (cnLength--) {
+            let currentNode = childNodes[cnLength];
+            if (currentNode.nodeType === 1 &&
+                (excludes + ',').indexOf(currentNode.nodeName.toLowerCase() + ',') === -1) {
+                findAndReplace(searchText, replacement, currentNode);
+            }
+            if (currentNode.nodeType !== 3 || !regex.test(currentNode.data)) {
+                continue;
+            }
+            let parent = currentNode.parentNode,
+                frag = (function () {
+                    let html = currentNode.data.replace(regex, replacement),
+                        wrap = document.createElement('div'),
+                        frag = document.createDocumentFragment();
+                    wrap.innerHTML = html;
+                    while (wrap.firstChild) {
+                        frag.appendChild(wrap.firstChild);
+                    }
+                    return frag;
+                })();
+            parent.insertBefore(frag, currentNode);
+            parent.removeChild(currentNode);
+        }
+    };
+    
+    let words = searchString.split(' ');
+    let listElement = document.querySelector('.list-group');
+    words.forEach(word => {
+        findAndReplace(word, '<mark class="highlight">$&</mark>', listElement);
+    });
+}
+
 export const LogList = ({ state, dispatch }) => {
-    const { loading, logs, pagination } = state;
+    const { loading, logs, pagination, search } = state;
     const { currentPage, limit, total } = pagination;
 
     if (loading) return Loading();
+
+    if(search) {
+        highlightText(search);
+    }
     
     return html`
         <div>

@@ -16,8 +16,18 @@ body.render {
     margin: 5px 5px 0 0;
     float: left;
 }
+
 .dashicons {
     margin: 5px 5px 0 0;
+}
+
+pre.code {
+    background-color: #fafafa;
+    font-size: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    max-width: 400px;
+    display: flex;
 }
 
 .log-data-info {
@@ -89,4 +99,10 @@ body.render {
 
 .ocurrency-chart .inner-bar.red {
     background-color: rgb(182, 37, 37);
+}
+
+mark.highlight {
+    background-color: yellow;
+    color: black;
+    padding: 2px;
 }

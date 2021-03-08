@@ -137,41 +137,59 @@ class Admin {
                 wp_deregister_style('wp-admin');
                 wp_enqueue_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css', array() );
                 wp_enqueue_style( 'bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css', array() );
-                wp_enqueue_style( 'wugstracker-admin', WPJS_DEBUG_ASSETS . '/admin/css/admin.css', array(), time() , 'all' );
+                wp_enqueue_style( 'wugstracker-admin', WUGSTRACKER_URL . '/admin/css/admin.css', array(), time() , 'all' );
 
                 wp_enqueue_script( 'luxon', 'https://cdn.jsdelivr.net/npm/luxon@1.26.0/build/global/luxon.min.js', array() );
                 wp_enqueue_script( 'lodash', 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js', array() );
-                wp_enqueue_script( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js', array() );
-
+                wp_enqueue_script( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js', array() );
                 wp_enqueue_script( 'htm', 'https://unpkg.com/htm@latest/dist/htm.js', array() );
                 wp_enqueue_script( 'preact', 'https://unpkg.com/preact@latest/dist/preact.umd.js', array() );
                 wp_enqueue_script( 'hooks', 'https://unpkg.com/preact@latest/hooks/dist/hooks.umd.js', array() );
                 wp_enqueue_script( 'compat', 'https://unpkg.com/preact@latest/compat/dist/compat.umd.js', array() );
-                wp_enqueue_script( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js', array() );
                 wp_enqueue_script( 'prop-types', 'https://unpkg.com/prop-types@latest/prop-types.min.js', array() );
                 wp_enqueue_script( 'babel', 'https://unpkg.com/babel-standalone@6.26.0/babel.min.js', array() );
 
-                wp_enqueue_script( 'wugstracker-admin-api', WPJS_DEBUG_ASSETS . '/admin/js/api.js', array(), time() , 'all' );
+                wp_enqueue_script( 'wugstracker-admin-api', WUGSTRACKER_URL . '/admin/js/api.js', array(), time() , 'all' );
                 $data = array(
                     'current' => str_replace('wugstracker-admin-', '', $currentPage),
                     'home_url' => home_url(),
                     'api_url' => home_url() . '/wugs/',
                     'wp_admin_menu' => $GLOBALS['menu'],
-                    'options' => [
-                        'wugstracker_JS_active' => get_option('wugstracker_JS_active', false) === '1' ? true : false,
-                        'wugstracker_PHP_active' => get_option('wugstracker_PHP_active', false) === '1' ? true : false
-                    ]
+                    'options' => self::get_options()
                 );
                 wp_localize_script( 'wugstracker-admin-api', 'wugs_data', $data );
                 wp_enqueue_script( 'wugstracker-admin-api' );
 
-                wp_enqueue_script( 'wugstracker-admin-api', WPJS_DEBUG_ASSETS . '/admin/js/api.js', array(), time() , 'all' );
+                wp_enqueue_script( 'wugstracker-admin-api', WUGSTRACKER_URL . '/admin/js/api.js', array(), time() , 'all' );
             }        
         
             if( $currentPage === 'wugstracker-admin-tracker' || $currentPage === 'wugstracker-admin-configuration' ) {
-                wp_enqueue_script( 'wugstracker-admin-app', WPJS_DEBUG_ASSETS . '/admin/app/app.js', array(), time() , 'all' );
+                wp_enqueue_script( 'wugstracker-admin-app', WUGSTRACKER_URL . '/admin/app/app.js', array(), time() , 'all' );
             }
         }       
+    }
+
+    private static function get_options() {
+        $options = [
+            'wugstracker_JS_active' => get_option('wugstracker_JS_active', false) === '1' ? true : false,
+            'wugstracker_JS_test_active' => get_option('wugstracker_JS_test_active', false) === '1' ? true : false,
+            'wugstracker_WP_debug' => get_option('wugstracker_WP_debug', false) === '1' ? true : false,
+            'wugstracker_WP_log' => get_option('wugstracker_WP_log', false) === '1' ? true : false,
+            'wugstracker_WP_display' => get_option('wugstracker_WP_display', false) === '1' ? true : false,
+            'wugstracker_PHP_active' => get_option('wugstracker_PHP_active', false) === '1' ? true : false,
+        ];
+
+        return $options;
+    }
+
+    public static function get_option($name) {
+        $options = self::get_options();
+
+        if(isset($options[$name])) {
+            return $options[$name];
+        }
+
+        return null;
     }
 
     /**

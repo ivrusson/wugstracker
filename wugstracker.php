@@ -25,14 +25,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define('WPJS_DEBUG_VERSION', '1.0.0');
+define( 'WUGSTRACKER_VERSION', '1.0.0' );
 
-define( 'WPJS_DEBUG__FILE__', __FILE__ );
+define( 'WUGSTRACKER__FILE__', __FILE__ );
 
-define( 'WPJS_DEBUG_PLUGIN_BASE', plugin_basename( WPJS_DEBUG__FILE__ ) );
-define( 'WPJS_DEBUG_PATH', plugin_dir_path( WPJS_DEBUG__FILE__ ) );
-define( 'WPJS_DEBUG_URL', plugins_url( '/', WPJS_DEBUG__FILE__ ) );
-define('WPJS_DEBUG_ASSETS', plugins_url('/assets', __FILE__));
+define( 'WUGSTRACKER_PLUGIN_BASE', plugin_basename( WUGSTRACKER__FILE__ ) );
+define( 'WUGSTRACKER_PATH', plugin_dir_path( WUGSTRACKER__FILE__ ) );
+define( 'WUGSTRACKER_URL', plugins_url( '/', WUGSTRACKER__FILE__ ) );
 
 add_action( 'plugins_loaded', 'wugstracker_load_plugin_textdomain' );
 
@@ -41,8 +40,8 @@ if ( ! version_compare( PHP_VERSION, '5.6', '>=' ) ) {
 } elseif ( ! version_compare( get_bloginfo( 'version' ), '5.2', '>=' ) ) {
 	add_action( 'admin_notices', 'wugstracker_fail_wp_version' );
 } else {
-	require WPJS_DEBUG_PATH . 'vendor/autoload.php';
-	require WPJS_DEBUG_PATH . 'includes/plugin.php';
+	require WUGSTRACKER_PATH . 'vendor/autoload.php';
+	require WUGSTRACKER_PATH . 'includes/plugin.php';
 }
 
 /**

@@ -108,6 +108,13 @@ class Log {
 
         if($_id) {
             $result = $wugsdb->logs->deleteBy($_id);
+            if($result) {
+                $result = $wugsdb->logs
+                ->createQueryBuilder()
+                ->where([ "parent_id", "=", $logId ])
+                ->getQuery()
+                ->delete();
+            }
             $res->status(200)->send($result);
         } else {            
             $res->status(400)->error('ID not found');
@@ -132,7 +139,12 @@ class Log {
         $doc['updated_at'] = new \DateTime();
         $doc['created_at'] = new \DateTime();
 
-        $exist = $wugsdb->logs->findOneBy(['msg', '=', $doc['msg']]);
+        $exist = $wugsdb->logs->createQueryBuilder()
+        ->where(['msg', '=', $doc['msg']])
+        ->orderBy(['created_at' => 'desc'])
+        ->getQuery()
+        ->first();
+        
         $count = isset($exist['count']) ? ($exist['count']+1) : 1;
         if($exist) {
             $result = $wugsdb->logs->updateById($exist['_id'], [ "count" => $count, "updated_at" => $doc['updated_at'] ]);
@@ -162,23 +174,31 @@ class Log {
         $query = $req->query;
         $search = isset($query['search']) ? html_entity_decode($query['search']) : null;
         $where = isset($query['where']) ? json_decode(html_entity_decode(str_replace('\\', '', $query['where'])), true) : null;
-        $orderBy = isset($query['orderBy']) ? json_decode(html_entity_decode(str_replace('\\', '', $query['orderBy'])), true) : ['created_at' => 'asc'];
+        $orderBy = isset($query['orderBy']) ? json_decode(html_entity_decode(str_replace('\\', '', $query['orderBy'])), true) : ['created_at' => 'desc'];
         $limit = isset($query['limit']) ? intval($query['limit']) : 100;
         $skip = isset($query['skip']) ? intval($query['skip']) : 0;
 
             $logsQueryBuilder = $wugsdb->logs->createQueryBuilder();
+            $logsQueryCountBuilder = $wugsdb->logs->createQueryBuilder();
             if($where) {
                 $logsQueryBuilder->where($where);
+                $logsQueryCountBuilder->where($where);
             }
+            $logsQueryBuilder->where(['parent_id', '=', null]);
+            $logsQueryCountBuilder->where(['parent_id', '=', null]);
             if($search) {
                 $logsQueryBuilder->search(["msg", "url", "browser_agent", "ip", "created_at.date",  "updated_at.date"], $search);
                 $logsQueryBuilder->except(["searchScore"]);
-            }
-            $logsQueryBuilder
-            ->limit($limit)
-            ->skip($skip)
-            ->orderBy($orderBy)
-            ->join(function($log) use ($wugsdb){
+
+                $logsQueryCountBuilder->search(["msg", "url", "browser_agent", "ip", "created_at.date",  "updated_at.date"], $search);
+            }       
+            
+            $count = count($logsQueryCountBuilder->select(["_id"])->getQuery()->fetch());
+
+            $logsQueryBuilder->limit($limit);
+            $logsQueryBuilder->skip($skip);
+            $logsQueryBuilder->orderBy($orderBy);
+            $logsQueryBuilder->join(function($log) use ($wugsdb){
                 return $wugsdb->logs->findBy([ "parent_id", "=", $log["_id"] ], ['created_at' => 'desc']);
             }, "childs")
             ->join(function($log) use ($wugsdb) {
@@ -192,7 +212,7 @@ class Log {
 
         $res->status(200)->send([
             "results" => $results,
-            "total" => $wugsdb->logs->count(),
+            "total" => $count,
             "total_results" => count($results),
             "orderBy" => $orderBy,
             "skip" => $skip,

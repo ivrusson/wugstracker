@@ -5,7 +5,7 @@ export const initialState = {
     logs: [],
     pagination: {
         currentPage: 1,
-        limit: 2,
+        limit: 5,
         skip: 0,
         total: 0,
         total_results: 0,
