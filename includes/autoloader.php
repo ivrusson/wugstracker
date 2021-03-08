@@ -56,7 +56,7 @@ class Autoloader {
 	 */
 	public static function run( $default_path = '', $default_namespace = '' ) {
 		if ( '' === $default_path ) {
-			$default_path = WPJS_DEBUG_PATH;
+			$default_path = WUGSTRACKER_PATH;
 		}
 
 		if ( '' === $default_namespace ) {
